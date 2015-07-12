@@ -1,0 +1,21 @@
+.square {
+	width: 50px;
+	height: 50px;
+	padding: 0px;
+	padding-left: 12px;
+
+}
+.white {
+  background-color: white;
+  font-size: 200%;
+}
+.black {
+  background-color: gray;
+  font-size: 200%;
+}
+.possibleMove {
+  background-color: green !important;
+}
+.current {
+  background-color: blue !important;
+}

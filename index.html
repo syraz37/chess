@@ -1,0 +1,17 @@
+<!doctype html>
+<html ng-app="chessApp">
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
+    <script src="chess.js"></script>
+    <link rel="stylesheet" href="chess.css">
+  </head>
+  <body>
+    <div ng-controller="ChessController as chess">
+      <table width="400" height="400">
+        <tr ng-repeat="squares in chess.squares">
+          <td ng-repeat="square in squares" class="square {{ square.color }} {{ square.current }} {{ square.possibleMove }}" ng-click="chess.action(square)">{{ square.piece.html }}</td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
