@@ -3,7 +3,7 @@
 	height: 50px;
 	padding: 0px;
 	padding-left: 12px;
-
+  cursor: pointer;
 }
 .white {
   background-color: white;

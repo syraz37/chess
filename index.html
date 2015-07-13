@@ -6,6 +6,7 @@
     <script src="app.js"></script>
     <script src="chess.js"></script>
     <script src="piece.js"></script>
+    <script src="game-play.js"></script>
     <link rel="stylesheet" href="chess.css">
   </head>
   <body>
@@ -15,6 +16,7 @@
           <td ng-repeat="square in squares" class="square {{ square.color }} {{ square.current }} {{ square.possibleMove }}" ng-click="chess.action(square)">{{ square.piece.html }}</td>
         </tr>
       </table>
+      <button ng-click="chess.undo()" >&#9100; Undo</button>
     </div>
   </body>
 </html>
