@@ -1,5 +1,5 @@
 angular.module('chess', ['piece', 'game-play'])
-  .controller('ChessController', ['pieceService', 'playService', function(pieceService, playService) {
+.controller('ChessController', ['playService', function(playService) {
     
     this.squares = playService.getChessBoard();
     this.turn = playService.getTurn();
@@ -18,5 +18,4 @@ angular.module('chess', ['piece', 'game-play'])
 	this.undo = function() {
 		playService.undo();
 	}
-
 }]);

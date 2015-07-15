@@ -52,10 +52,18 @@ angular.module('game-play', ['piece'])
 	function movePiece(fromSquare, toSquare) {
 		var from = fromSquare.position;
 		var to = toSquare.position;
-		fromSquare.piece.updatePosition(to.x, to.y);
+		var pwanUpgrade = fromSquare.piece.updatePosition(to.x, to.y, true);
 		var killedPiece = chessboard[to.y][to.x].piece ? chessboard[to.y][to.x].piece.id : null;
 		var movedPiece = fromSquare.piece.id;
-		toSquare.piece = fromSquare.piece;
+
+
+		if(pwanUpgrade) {
+			toSquare.piece = pieceService.createPiece('queen', turn.color, to.x, to.y);
+			pieces[toSquare.piece.id] = toSquare.piece;
+		} else {
+			toSquare.piece = fromSquare.piece;
+		}
+			
 		fromSquare.piece = null;
 		gamePlay.push({
 			movedPiece: movedPiece,
@@ -143,6 +151,7 @@ angular.module('game-play', ['piece'])
 		});
 		possibleMoves = revisedPossibleMoves;
 	};
+
 }]);
 
 //casling, pawn upgrade

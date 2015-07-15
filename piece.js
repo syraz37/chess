@@ -1,9 +1,7 @@
 angular.module('piece', [])
 .service('pieceService', function pieceService() {
 
-
 	var Pwan = function(id, x, y, color, init) {
-		this.id = id;
 		this.id = id;
 		this.name = 'pwan';
 		this.color = color;
@@ -16,6 +14,7 @@ angular.module('piece', [])
 		this.updatePosition = function(x, y) {
 			this.positionX = x;
 			this.positionY = y;
+			return (this.color == 'black' && y == 7) || (this.color == 'white' && y == 0);
 		};
 		this.html = String.fromCharCode(0x265F -  (this.color == 'black' ? 0x0 : 0x6));
 		this.getPossibleMoves = function(squares) {
@@ -50,17 +49,21 @@ angular.module('piece', [])
 		this.id = id;
 		this.name = 'rook';
 		this.color = color;
-		this.isMoved = false;
+		this.moveCount = 0;
 		if(init) {
 			this.initialPositionX = x;
 			this.initialPositionY = y;
 		}
 		this.positionX = x;
 		this.positionY = y;
-		this.updatePosition = function(x, y) {
+		this.updatePosition = function(x, y, move) {
 			this.positionX = x;
 			this.positionY = y;
-			this.isMoved = true;
+			if(move) {
+				this.moveCount++;
+			} else{
+				this.moveCount--;
+			}
 		};
 		this.html = String.fromCharCode(0x265C -  (color == 'black' ? 0x0 : 0x6));
 		this.getPossibleMoves = function(squares) {
@@ -148,18 +151,21 @@ angular.module('piece', [])
 		this.id = id;
 		this.name = 'king';
 		this.color = color;
-		this.isMoved = false;
+		this.moveCount = 0;
 		if(init) {
 			this.initialPositionX = x;
 			this.initialPositionY = y;
-			this.isMoved = false;
 		}
 		this.positionX = x;
 		this.positionY = y;
-		this.updatePosition = function(x, y) {
+		this.updatePosition = function(x, y, move) {
 			this.positionX = x;
 			this.positionY = y;
-			this.isMoved = true;
+			if(move) {
+				this.moveCount++;
+			} else{
+				this.moveCount--;
+			}
 		};
 		this.html = String.fromCharCode(0x265A - (color == 'black' ? 0x0 : 0x6));
 		this.getPossibleMoves = function(squares) {
@@ -210,61 +216,77 @@ angular.module('piece', [])
 
 			//check for bishop/queen
 			for(var x = this.positionX + 1, y = this.positionY + 1; x < 8 && y < 8; x++, y++) {
-				if(squares[y][x].piece && squares[y][x].piece.color == this.color)
-					break;
-				if(squares[y][x].piece && (squares[y][x].piece.name == 'queen' || squares[y][x].piece.name == 'bishop') && squares[y][x].piece.color != this.color) {
-					return true;
+				if(squares[y][x].piece) {
+					if((squares[y][x].piece.name == 'queen' || squares[y][x].piece.name == 'bishop') && squares[y][x].piece.color != this.color) {
+						return true;
+					} else {
+						break;
+					}
 				}
 			}
 			for(var x = this.positionX + 1, y = this.positionY - 1; x < 8 && y >= 0; x++, y--) {
-				if(squares[y][x].piece && squares[y][x].piece.color == this.color)
-					break;
-				if(squares[y][x].piece && (squares[y][x].piece.name == 'queen' || squares[y][x].piece.name == 'bishop') && squares[y][x].piece.color != this.color) {
-					return true;
+				if(squares[y][x].piece) {
+					if((squares[y][x].piece.name == 'queen' || squares[y][x].piece.name == 'bishop') && squares[y][x].piece.color != this.color) {
+						return true;
+					} else {
+						break;
+					}
 				}
 			}
 			for(var x = this.positionX - 1, y = this.positionY + 1; x >= 0 && y < 8; x--, y++) {
-				if(squares[y][x].piece && squares[y][x].piece.color == this.color)
-					break;
-				if(squares[y][x].piece && (squares[y][x].piece.name == 'queen' || squares[y][x].piece.name == 'bishop') && squares[y][x].piece.color != this.color) {
-					return true;
+				if(squares[y][x].piece) {
+					if((squares[y][x].piece.name == 'queen' || squares[y][x].piece.name == 'bishop') && squares[y][x].piece.color != this.color) {
+						return true;
+					} else {
+						break;
+					}
 				}
 			}
 			for(var x = this.positionX - 1, y = this.positionY - 1; x >= 0 && y >= 0; x--, y--) {
-				if(squares[y][x].piece && squares[y][x].piece.color == this.color)
-					break;
-				if(squares[y][x].piece && (squares[y][x].piece.name == 'queen' || squares[y][x].piece.name == 'bishop') && squares[y][x].piece.color != this.color) {
-					return true;
+				if(squares[y][x].piece) {
+					if((squares[y][x].piece.name == 'queen' || squares[y][x].piece.name == 'bishop') && squares[y][x].piece.color != this.color) {
+						return true;
+					} else {
+						break;
+					}
 				}
 			}
 
 			//check for rook/queen
 			for(var i = this.positionY + 1; i < 8; i++) {
-				if(squares[i][this.positionX].piece && squares[i][this.positionX].piece.color == this.color)
-					break;
-				if(squares[i][this.positionX].piece && (squares[i][this.positionX].piece.name == 'queen' || squares[i][this.positionX].piece.name == 'rook') && squares[i][this.positionX].piece.color != this.color) {
-					return true;
+				if(squares[i][this.positionX].piece) {
+					if((squares[i][this.positionX].piece.name == 'queen' || squares[i][this.positionX].piece.name == 'rook') && squares[i][this.positionX].piece.color != this.color) {
+						return true;
+					} else {
+						break;
+					}
 				}
 			}
 			for(var i = this.positionY - 1; i >= 0; i--) {
-				if(squares[i][this.positionX].piece && squares[i][this.positionX].piece.color == this.color)
-					break;
-				if(squares[i][this.positionX].piece && (squares[i][this.positionX].piece.name == 'queen' || squares[i][this.positionX].piece.name == 'rook') && squares[i][this.positionX].piece.color != this.color) {
-					return true;
+				if(squares[i][this.positionX].piece) {
+					if((squares[i][this.positionX].piece.name == 'queen' || squares[i][this.positionX].piece.name == 'rook') && squares[i][this.positionX].piece.color != this.color) {
+						return true;
+					} else {
+						break;
+					}
 				}
 			}
 			for(var i = this.positionX + 1; i < 8; i++) {
-				if(squares[this.positionY][i].piece && squares[this.positionY][i].piece.color == this.color)
-					break;
-				if(squares[this.positionY][i].piece && (squares[this.positionY][i].piece.name == 'queen' || squares[this.positionY][i].piece.name == 'rook') && squares[this.positionY][i].piece.color != this.color) {
-					return true;
+				if(squares[this.positionY][i].piece) {
+					if((squares[this.positionY][i].piece.name == 'queen' || squares[this.positionY][i].piece.name == 'rook') && squares[this.positionY][i].piece.color != this.color) {
+						return true;
+					} else {
+						break;
+					}
 				}
 			}
 			for(var i = this.positionX - 1; i >= 0; i--) {
-				if(squares[this.positionY][i].piece && squares[this.positionY][i].piece.color == this.color)
-					break;
-				if(squares[this.positionY][i].piece && (squares[this.positionY][i].piece.name == 'queen' || squares[this.positionY][i].piece.name == 'rook') && squares[this.positionY][i].piece.color != this.color) {
-					return true;
+				if(squares[this.positionY][i].piece) {
+					if((squares[this.positionY][i].piece.name == 'queen' || squares[this.positionY][i].piece.name == 'rook') && squares[this.positionY][i].piece.color != this.color) {
+						return true;
+					} else {
+						break;
+					}
 				}
 			}
 
@@ -288,10 +310,10 @@ angular.module('piece', [])
 
 	this.getAllPieces = function() {
 		var pieces = {};
-		// for (var i = 0; i < 8; i++) {
-		// 	pieces['blackpwan' + i] = new Pwan('blackpwan' + i, i, 1, 'black', true);
-		// 	pieces['whitepwan' + i] = new Pwan('whitepwan' + i, i, 6, 'white', true);
-		// };
+		for (var i = 0; i < 8; i++) {
+			pieces['blackpwan' + i] = new Pwan('blackpwan' + i, i, 1, 'black', true);
+			pieces['whitepwan' + i] = new Pwan('whitepwan' + i, i, 6, 'white', true);
+		};
 		var color = 'black';
 		for (var j = 0; j < 8; j += 7) {
 			for(var k = 0; k < 8; k += 7) {
@@ -396,21 +418,21 @@ angular.module('piece', [])
 		return moves;
 	}
 
-	this.createPiece = function(type, x, y) {
+	this.createPiece = function(type, color, x, y) {
 		var randNo = Math.floor((Math.random() * 1000) + 8);
-		switch(type.name) {
+		switch(type) {
 			case 'pwan':
-				return new Pwan(type.color+type.name+randNo, x, y, type.color);
+				return new Pwan(color+type+randNo, x, y, color);
 			case 'rook':
-				return new Rook(type.color+type.name+randNo, x, y, type.color);
+				return new Rook(color+type+randNo, x, y, color);
 			case 'knight':
-				return new Knight(type.color+type.name+randNo, x, y, type.color);
+				return new Knight(color+type+randNo, x, y, color);
 			case 'bishop':
-				return new Bishop(type.color+type.name+randNo, x, y, type.color);
+				return new Bishop(color+type+randNo, x, y, color);
 			case 'queen':
-				return new Queen(type.color+type.name+randNo, x, y, type.color);
+				return new Queen(color+type+randNo, x, y, color);
 			case 'king':
-				return new King(type.color+type.name+randNo, x, y, type.color);
+				return new King(color+type+randNo, x, y, color);
 		}
 	}
 
